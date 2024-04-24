@@ -802,6 +802,18 @@ Action::Result ActionImpl::set_current_speed(float speed_m_s)
     return fut.get();
 }
 
+void ActionImpl::set_gps_global_origin_async(
+    double latitude_deg, double longitude_deg, float absolute_altitude_m,
+    const Action::ResultCallback& callback)
+{
+
+}
+Action::Result ActionImpl::set_gps_global_origin(
+    double latitude_deg, double longitude_deg, float absolute_altitude_m)
+{
+
+}
+
 Action::Result ActionImpl::action_result_from_command_result(MavlinkCommandSender::Result result)
 {
     switch (result) {
