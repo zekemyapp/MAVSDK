@@ -802,16 +802,30 @@ Action::Result ActionImpl::set_current_speed(float speed_m_s)
     return fut.get();
 }
 
-void ActionImpl::set_gps_global_origin_async(
-    double latitude_deg, double longitude_deg, float absolute_altitude_m,
-    const Action::ResultCallback& callback)
-{
-
-}
 Action::Result ActionImpl::set_gps_global_origin(
     double latitude_deg, double longitude_deg, float absolute_altitude_m)
 {
+    const uint64_t autopilot_time_usec =
+        std::chrono::duration_cast<std::chrono::microseconds>(
+            _system_impl->get_autopilot_time().now().time_since_epoch())
+            .count();
 
+    return _system_impl->queue_message([&](MavlinkAddress mavlink_address, uint8_t channel) {
+        mavlink_message_t message;
+        mavlink_msg_set_gps_global_origin_pack_chan(
+            mavlink_address.system_id,
+            mavlink_address.component_id,
+            channel,
+            &message,
+            _system_impl->get_system_id(),
+            latitude_deg * 1e7,
+            longitude_deg * 1e7,
+            absolute_altitude_m * 1000,
+            autopilot_time_usec); // FIXME: reset_counter not set
+        return message;
+    }) ?
+        Action::Result::Success :
+        Action::Result::ConnectionError;
 }
 
 Action::Result ActionImpl::action_result_from_command_result(MavlinkCommandSender::Result result)

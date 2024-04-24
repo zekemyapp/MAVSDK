@@ -276,15 +276,6 @@ Action::Result Action::set_current_speed(float speed_m_s) const
     return _impl->set_current_speed(speed_m_s);
 }
 
-void Action::set_gps_global_origin_async(
-    double latitude_deg,
-    double longitude_deg,
-    float absolute_altitude_m,
-    const ResultCallback callback)
-{
-    _impl->set_gps_global_origin_async(latitude_deg, longitude_deg, absolute_altitude_m, callback);
-}
-
 Action::Result Action::set_gps_global_origin(
     double latitude_deg, double longitude_deg, float absolute_altitude_m) const
 {
